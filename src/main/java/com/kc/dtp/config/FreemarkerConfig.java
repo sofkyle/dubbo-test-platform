@@ -7,8 +7,6 @@ import org.springframework.web.reactive.config.ViewResolverRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigurer;
 
-import java.util.Properties;
-
 /**
  * @author: Kyle
  */
