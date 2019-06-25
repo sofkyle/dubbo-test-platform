@@ -1,23 +1,33 @@
 package com.kc.dtp.config;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.DispatcherHandler;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.reactive.config.EnableWebFlux;
-import org.springframework.web.server.WebHandler;
+import org.springframework.web.reactive.config.ResourceHandlerRegistry;
+import org.springframework.web.reactive.config.ViewResolverRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigurer;
 
 /**
  * @author: Kyle
  */
 @Configuration
-@ComponentScan
 @EnableWebFlux
-public class WebFluxConfig {
+public class WebFluxConfig implements WebFluxConfigurer {
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.freeMarker();
+    }
+
     @Bean
-    public WebHandler webHandler(ApplicationContext applicationContext) {
-        DispatcherHandler dispatcherHandler = new DispatcherHandler(applicationContext);
-        return dispatcherHandler;
+    public FreeMarkerConfigurer freeMarkerConfigurer() {
+        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
+        configurer.setTemplateLoaderPath("classpath:/templates");
+        return configurer;
     }
 }
