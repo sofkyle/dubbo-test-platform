@@ -9,21 +9,12 @@
 
 <body>
 
-<b>请添加要测试的API：</b>
-<input id="apiTxt" name="apiTxt" type="text" value="${api}" />
-<input name="addApiBtn" type="submit" value="添加" />
-
+<form action="/api/add" method="post">
+    <b>请添加要测试的API：</b>
+    <input id="apiTxt" name="apiTxt" type="text" value="${api}" />
+    <input name="addApiBtn" type="submit" value="添加" />
+${api}
+</form>
 </body>
-<script src="<@s.url '/js/jquery-3.2.1.min.js' />"></script>
-<script type="text/javascript">
-    $().ready(function(){
-        $('#addApiBtn').click(function() {
-            var apiTxt = $('#apiTxt').val();
-            var url = "/api/add?api=" + apiTxt;
-            $.post(url, function(result) {
-
-            });
-        });
-    });
-</script>
+<script src="/js/jquery-3.2.1.min.js"></script>
 </html>
