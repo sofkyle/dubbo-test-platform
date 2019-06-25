@@ -1,11 +1,10 @@
 package com.kc.dtp.controller;
 
+import com.kc.dtp.service.ApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 /**
@@ -15,8 +14,17 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api")
 public class ApiController {
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addApi(@RequestParam(value = "apiTxt")String apiTxt, final Model model) {
+    @Autowired
+    private ApiService apiService;
+
+    @GetMapping(value = "/list")
+    public String list(@ModelAttribute Long userId) {
+        // apiService.getAllByUserId(userId);
+        return "list";
+    }
+
+    @PostMapping(value = "/add")
+    public String addApi(@ModelAttribute String apiTxt, final Model model) {
         System.out.println(apiTxt);
         model.addAttribute("api", apiTxt);
         return "index";
