@@ -69,6 +69,17 @@
             <artifactId>dubbo-common</artifactId>
             <version>2.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-remoting-netty4</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.25.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
