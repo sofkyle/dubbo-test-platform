@@ -16,6 +16,6 @@ public class ApiService {
     private UserApiDAO userApiDAO;
 
     public Flux<UserApi> getAllByUserId(Long userId) throws Exception {
-        return userApiDAO.selectByUserId(userId);
+        return Flux.just(userApiDAO.selectByUserId(userId));
     }
 }

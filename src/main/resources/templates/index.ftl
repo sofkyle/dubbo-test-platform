@@ -11,7 +11,7 @@
 
 <form action="/api/add" method="post" content="application/x-www-form-urlencoded">
     <b>请添加要测试的API：</b>
-    <input id="apiTxt" name="apiTxt" type="text" value="${api}" />
+    <input id="apiUrl" name="apiUrl" type="text" value="${api}" />
     <input name="addApiBtn" type="submit" value="添加" />
 ${api}
 </form>
