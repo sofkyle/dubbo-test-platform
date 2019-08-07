@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @Description: ZK Starter config
  */
 @Configuration
-public class ZookeeperConf {
+public class CuratorConfig {
 
     @Value("${zk.url}")
     private String zkUrl;
