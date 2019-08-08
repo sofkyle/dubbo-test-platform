@@ -13,7 +13,10 @@
     <b>请添加要测试的API：</b>
     <input id="apiUrl" name="apiUrl" type="text" value="${api}" />
     <input name="addApiBtn" type="submit" value="添加" />
-${api}
+
+    <div>
+        ${content}
+    </div>
 </form>
 </body>
 <script src="/js/jquery-3.2.1.min.js"></script>

@@ -1,14 +1,18 @@
 package com.kc.dtp.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.kc.dtp.discovery.Discovery;
+import com.kc.dtp.discovery.bean.ZKDataHolder;
 import com.kc.dtp.model.UserApi;
 import com.kc.dtp.service.ApiService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.Resource;
 
 /**
  * @author: Kyle
@@ -17,8 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api")
 public class ApiController {
 
-    @Autowired
+    @Resource
     private ApiService apiService;
+
+    @Resource
+    private Discovery<ZKDataHolder> discovery;
 
     @GetMapping(value = "/list")
     public String list(@ModelAttribute Long userId) {
@@ -32,7 +39,13 @@ public class ApiController {
 
     @PostMapping(value = "/add")
     public String addApi(UserApi userApi, final Model model) {
-        System.out.println(userApi.getApiUrl());
+        try {
+            String serviceName = userApi.getApiUrl();
+            String content = JSON.toJSONString(discovery.readRoot(serviceName));
+            model.addAttribute("content", content);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         model.addAttribute("api", userApi.getApiUrl());
         return "index";
     }
