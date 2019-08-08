@@ -1,8 +1,8 @@
-package com.kc.dtp.discovery.invoker.impl;
+package com.kc.dtp.invoker.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.kc.dtp.discovery.bean.ReferenceConfig;
-import com.kc.dtp.discovery.invoker.DubboInvoker;
+import com.kc.dtp.invoker.bean.ReferenceConfig;
+import com.kc.dtp.invoker.DubboInvoker;
 import org.apache.dubbo.config.utils.ReferenceConfigCache;
 import org.apache.dubbo.rpc.service.GenericService;
 

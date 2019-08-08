@@ -1,6 +1,6 @@
-package com.kc.dtp.discovery.invoker;
+package com.kc.dtp.invoker;
 
-import com.kc.dtp.discovery.bean.ReferenceConfig;
+import com.kc.dtp.invoker.bean.ReferenceConfig;
 
 public interface DubboInvoker {
     void config(ReferenceConfig referenceConfig);

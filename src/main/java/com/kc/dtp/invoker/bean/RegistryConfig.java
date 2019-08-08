@@ -1,4 +1,4 @@
-package com.kc.dtp.discovery.bean;
+package com.kc.dtp.invoker.bean;
 
 import lombok.Data;
 
