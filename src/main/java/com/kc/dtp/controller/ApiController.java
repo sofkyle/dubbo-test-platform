@@ -2,6 +2,7 @@ package com.kc.dtp.controller;
 
 import com.kc.dtp.bean.ProviderDetailVO;
 import com.kc.dtp.bean.ProviderVO;
+import com.kc.dtp.bean.UserApiVO;
 import com.kc.dtp.discovery.bean.ProviderConfig;
 import com.kc.dtp.exception.ServiceNotFoundException;
 import com.kc.dtp.model.UserApi;
@@ -39,10 +40,10 @@ public class ApiController {
         return "list";
     }
 
-    @PostMapping(value = "/add")
-    public String addApi(UserApi userApi, final Model model) {
+    @PostMapping(value = "/search")
+    public String searchApi(UserApiVO userApiVO, final Model model) {
         try {
-            String serviceName = userApi.getApiUrl();
+            String serviceName = userApiVO.getApiName();
             List<ProviderConfig> providerConfigList = apiService.getProviderByServiceName(serviceName).block();
 
             ProviderVO providerVO = ProviderVO.builder().build();
@@ -56,14 +57,14 @@ public class ApiController {
                 providerDetailVOList.add(providerDetailVO);
             });
             providerVO.setProviderDetailVOList(providerDetailVOList);
-            userApi.setProviderVO(providerVO);
+            userApiVO.setProviderVO(providerVO);
         } catch (ServiceNotFoundException snfe) {
             snfe.printStackTrace();
             return "index";
         } catch (Exception e) {
             e.printStackTrace();
         }
-        model.addAttribute("userApi", userApi);
+        model.addAttribute("userApiVO", userApiVO);
 
         return "service";
     }

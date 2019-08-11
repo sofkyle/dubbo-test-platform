@@ -8,12 +8,9 @@
 </head>
 
 <body>
+<div>
 
-<form action="/api/search" method="post" content="application/x-www-form-urlencoded">
-    <b>请检索要测试的API：</b>
-    <input id="apiName" name="userApiVO.apiName" type="text" value="${userApiVO.apiName}" />
-    <input name="searchApiBtn" type="submit" value="检索" />
-</form>
+</div>
 </body>
 <script src="/js/jquery-3.2.1.min.js"></script>
 </html>
