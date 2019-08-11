@@ -1,7 +1,7 @@
 package com.kc.dtp.discovery;
 
 import com.alibaba.fastjson.JSON;
-import com.kc.dtp.discovery.impl.zk.ZKReader;
+import com.kc.dtp.discovery.impl.zk.ZooKeeperReader;
 import com.kc.dtp.discovery.bean.ZKDataHolder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,13 +19,13 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class TestZookeeperDiscovery {
     @Resource
-    private ZKReader zkReader;
+    private ZooKeeperReader zooKeeperReader;
 
     @Test
-    public void testReadAll() {
+    public void testReadRoot() {
         try {
-            ZKDataHolder zkDataHolder = zkReader.recursiveRead("/dubbo/cn.touna.finance.repay.proxy.api.SpecialclearTrialServiceProxy");
-            System.out.println(JSON.toJSON(zkDataHolder));
+            zooKeeperReader.readService("org.apache.dubbo.demo.DemoService");
+            System.out.println(JSON.toJSON(ZooKeeperReader.dubboConfigHolderMap));
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }

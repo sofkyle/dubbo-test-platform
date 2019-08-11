@@ -10,27 +10,25 @@ import com.kc.dtp.discovery.bean.ZKDataHolder;
 import com.kc.dtp.discovery.constant.DubboDirectory;
 import org.apache.dubbo.common.URL;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * @Author: Kyle
  * @Description: Utils for wrap dubbo config
  */
-public class DubboExtractor {
-
-    private Map<String, ZKDataHolder> catogories;
+public class DubboConfigParserDelegator {
 
     /**
      * Wrap dubbo config
+     *
+     * @param dubboConfigHolder
      * @param zkDataHolder
      * @return dubboConfigHolder
      */
-    public DubboConfigHolder wrap(ZKDataHolder zkDataHolder) {
-        DubboConfigHolder dubboConfigHolder = new DubboConfigHolder();
-
+    public DubboConfigHolder parse(DubboConfigHolder dubboConfigHolder, ZKDataHolder zkDataHolder) {
         // Get path
         String path = zkDataHolder.getPath();
 
@@ -50,14 +48,14 @@ public class DubboExtractor {
             providerConfig.setHost(url.getHost());
             providerConfig.setPort(url.getPort());
             providerConfig.setServiceName(url.getParameter(ATTR_INTERFACE));
-            providerConfig.setMethods(url.getParameter(ATTR_METHODS).split(COMMA));
+            providerConfig.setMethods(Arrays.asList(url.getParameter(ATTR_METHODS).split(COMMA)));
 
             providerConfigs.add(providerConfig);
         }
 
         dubboConfigHolder.setProviders(providerConfigs);
 
-        // TODO: Add consumer config
+        // TODO: add consumer config
         return dubboConfigHolder;
     }
 }

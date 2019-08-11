@@ -1,6 +1,5 @@
 package com.kc.dtp.config;
 
-import com.kc.dtp.discovery.impl.zk.ZKReader;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;

@@ -1,18 +1,23 @@
 package com.kc.dtp.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.kc.dtp.discovery.Discovery;
-import com.kc.dtp.discovery.bean.ZKDataHolder;
+import com.kc.dtp.bean.ProviderDetailVO;
+import com.kc.dtp.bean.ProviderVO;
+import com.kc.dtp.discovery.bean.ProviderConfig;
+import com.kc.dtp.exception.ServiceNotFoundException;
 import com.kc.dtp.model.UserApi;
 import com.kc.dtp.service.ApiService;
+import org.apache.zookeeper.KeeperException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author: Kyle
@@ -23,9 +28,6 @@ public class ApiController {
 
     @Resource
     private ApiService apiService;
-
-    @Resource
-    private Discovery<ZKDataHolder> discovery;
 
     @GetMapping(value = "/list")
     public String list(@ModelAttribute Long userId) {
@@ -41,12 +43,28 @@ public class ApiController {
     public String addApi(UserApi userApi, final Model model) {
         try {
             String serviceName = userApi.getApiUrl();
-            String content = JSON.toJSONString(discovery.readRoot(serviceName));
-            model.addAttribute("content", content);
+            List<ProviderConfig> providerConfigList = apiService.getProviderByServiceName(serviceName).block();
+
+            ProviderVO providerVO = ProviderVO.builder().build();
+            providerVO.setServiceName(serviceName);
+            List<ProviderDetailVO> providerDetailVOList = new LinkedList<>();
+            providerConfigList.stream().forEach(e -> {
+                ProviderDetailVO providerDetailVO = ProviderDetailVO.builder()
+                        .host(e.getHost())
+                        .port(e.getPort())
+                        .methods(e.getMethods()).build();
+                providerDetailVOList.add(providerDetailVO);
+            });
+            providerVO.setProviderDetailVOList(providerDetailVOList);
+            userApi.setProviderVO(providerVO);
+        } catch (ServiceNotFoundException snfe) {
+            snfe.printStackTrace();
+            return "index";
         } catch (Exception e) {
             e.printStackTrace();
         }
-        model.addAttribute("api", userApi.getApiUrl());
-        return "index";
+        model.addAttribute("userApi", userApi);
+
+        return "service";
     }
 }

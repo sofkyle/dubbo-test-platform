@@ -1,5 +1,6 @@
 package com.kc.dtp.controller;
 
+import com.kc.dtp.model.UserApi;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String listPage(final Model model) {
-        model.addAttribute("api", "");
+        model.addAttribute("userApi", UserApi.builder().apiUrl("").build());
         return "index";
     }
 }

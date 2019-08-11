@@ -22,6 +22,6 @@ public class ZookeeperDiscoveryImpl implements Discovery<ZKDataHolder> {
 
     @Override
     public ZKDataHolder readRoot(String serviceName) throws Exception {
-        return zooKeeperReader.recursiveRead(zkRootPath + serviceName);
+        return zooKeeperReader.readService(serviceName);
     }
 }
