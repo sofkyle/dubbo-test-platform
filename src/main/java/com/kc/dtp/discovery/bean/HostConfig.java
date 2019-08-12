@@ -17,9 +17,4 @@ public class HostConfig extends RootConfig {
      * Port
      */
     protected int port;
-
-    /**
-     * Collections of method
-     */
-    protected String[] methods;
 }

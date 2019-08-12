@@ -43,7 +43,7 @@ public class ApiController {
     @PostMapping(value = "/search")
     public String searchApi(UserApiVO userApiVO, final Model model) {
         try {
-            String serviceName = userApiVO.getApiName();
+            String serviceName = userApiVO.getApiName().trim();
             List<ProviderConfig> providerConfigList = apiService.getProviderByServiceName(serviceName).block();
 
             ProviderVO providerVO = ProviderVO.builder().build();

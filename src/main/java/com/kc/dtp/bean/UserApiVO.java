@@ -11,9 +11,9 @@ import java.util.Date;
  * @author: Kyle
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserApiVO {
     private Long id;
     private Long userId;

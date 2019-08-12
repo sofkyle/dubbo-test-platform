@@ -22,7 +22,7 @@ public class WebFluxConfig implements WebFluxConfigurer {
     @Bean
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-        configurer.setTemplateLoaderPath("classpath:/templates");
+        configurer.setTemplateLoaderPaths("classpath:/templates", "classpath:/public");
         return configurer;
     }
 }

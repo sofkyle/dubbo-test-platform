@@ -66,7 +66,6 @@ public class ZooKeeperReader {
         zkDataHolder.setPath(servicePath);
 
         // set data
-
         byte[] dataBytes;
         try {
             dataBytes = curator.getData().forPath(servicePath);
