@@ -10,12 +10,15 @@
 
 <body>
 
-<div id="service-info">
-    <div>服务名：{{ name }}</div>
-    <select name="public-choice" v-model="providerSelected" @change="getProvider">
-        <option :value="provider.host" v-for="provider in providers" >{{ provider.host }}</option>
-    </select>
-</div>
+<form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
+    <div id="service-info">
+        <div>服务名：<input type="text" v-model="name" readonly /></div>
+        <select name="public-choice" v-model="providerSelected" @change="getProvider">
+            <option :value="provider.host" v-for="provider in providers" >{{ provider.methods[0] }}</option>
+        </select><br />
+        <input type="submit" value="调用" />
+    </div>
+</form>
 
 </body>
 
@@ -29,7 +32,12 @@
                 <#list userApiVO.providerVO.providerDetailVOList as provider >
                     {
                         host: '${provider.host}',
-                        port: '${provider.port}'
+                        port: '${provider.port}',
+                        methods: [
+                            <#list provider.methods as method>
+                                '${method}',
+                            </#list>
+                        ]
                     }
                 </#list>
             ],

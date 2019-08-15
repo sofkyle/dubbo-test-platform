@@ -11,10 +11,7 @@ import org.apache.zookeeper.KeeperException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.LinkedList;
@@ -67,5 +64,11 @@ public class ApiController {
         model.addAttribute("userApiVO", userApiVO);
 
         return "service";
+    }
+
+    @PostMapping(value = "/search")
+    @ResponseBody
+    public String invokeService(UserApiVO userApiVO, final Model model) {
+        return null;
     }
 }
