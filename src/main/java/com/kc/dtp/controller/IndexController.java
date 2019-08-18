@@ -1,7 +1,6 @@
 package com.kc.dtp.controller;
 
-import com.kc.dtp.bean.UserApiVO;
-import com.kc.dtp.model.UserApi;
+import com.kc.dtp.bean.ApiVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String listPage(final Model model) {
-        model.addAttribute("userApiVO", UserApiVO.builder().apiName("").build());
+        model.addAttribute("userApiVO", ApiVO.builder().apiName("").build());
         return "index";
     }
 }

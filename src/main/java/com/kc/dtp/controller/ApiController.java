@@ -2,15 +2,12 @@ package com.kc.dtp.controller;
 
 import com.kc.dtp.bean.ProviderDetailVO;
 import com.kc.dtp.bean.ProviderVO;
-import com.kc.dtp.bean.UserApiVO;
+import com.kc.dtp.bean.ApiVO;
 import com.kc.dtp.discovery.bean.ProviderConfig;
 import com.kc.dtp.exception.ServiceNotFoundException;
-import com.kc.dtp.model.UserApi;
 import com.kc.dtp.service.ApiService;
-import org.apache.zookeeper.KeeperException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,9 +35,9 @@ public class ApiController {
     }
 
     @PostMapping(value = "/search")
-    public String searchApi(UserApiVO userApiVO, final Model model) {
+    public String searchApi(ApiVO apiVO, final Model model) {
         try {
-            String serviceName = userApiVO.getApiName().trim();
+            String serviceName = apiVO.getApiName().trim();
             List<ProviderConfig> providerConfigList = apiService.getProviderByServiceName(serviceName).block();
 
             ProviderVO providerVO = ProviderVO.builder().build();
@@ -54,21 +51,22 @@ public class ApiController {
                 providerDetailVOList.add(providerDetailVO);
             });
             providerVO.setProviderDetailVOList(providerDetailVOList);
-            userApiVO.setProviderVO(providerVO);
+            apiVO.setProviderVO(providerVO);
         } catch (ServiceNotFoundException snfe) {
             snfe.printStackTrace();
             return "index";
         } catch (Exception e) {
             e.printStackTrace();
         }
-        model.addAttribute("userApiVO", userApiVO);
+        model.addAttribute("apiVO", apiVO);
 
         return "service";
     }
 
     @PostMapping(value = "/search")
     @ResponseBody
-    public String invokeService(UserApiVO userApiVO, final Model model) {
+    public String invokeService(ApiVO apiVO, final Model model) {
+
         return null;
     }
 }

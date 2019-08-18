@@ -26,7 +26,7 @@ public class ApiServiceImpl implements ApiService {
     /**
      * Dubbo调用类
      */
-    private DubboInvoker dubboInvoker = DubboInvokerFactory.get();
+    private DubboInvoker dubboInvoker;
 
     @Resource
     private Discovery<ZKDataHolder> discovery;
@@ -53,6 +53,7 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public Mono<String> invokeService(ReferenceConfig referenceConfig, InvokerParamDTO invokerParamDTO) throws Exception {
+        dubboInvoker  = DubboInvokerFactory.get("2.7.1");
         dubboInvoker.config(referenceConfig);
         Object result = dubboInvoker.doInvoke("",
                 invokerParamDTO.getTypes().toArray(new String[invokerParamDTO.getTypes().size()]),

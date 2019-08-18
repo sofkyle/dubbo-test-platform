@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserApiVO {
+public class ApiVO {
     private Long id;
     private Long userId;
     private String apiName;

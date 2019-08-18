@@ -11,7 +11,7 @@
 
 <form action="/api/search" method="post" content="application/x-www-form-urlencoded">
     <b>请检索要测试的API：</b>
-    <input id="apiName" name="apiName" type="text" value="${userApiVO.apiName}" />
+    <input id="apiName" name="apiName" type="text" value="${apiVO.apiName}" />
     <input name="searchApiBtn" type="submit" value="检索" />
 </form>
 </body>
