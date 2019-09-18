@@ -7,8 +7,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class ProviderDetailVO {
-    private String host;
-    private int port;
+public class InterfaceVO {
+    private String name;
+    private String group;
+    private String version;
     private List<String> methods;
 }

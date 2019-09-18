@@ -15,10 +15,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiVO {
-    private Long id;
-    private Long userId;
-    private String apiName;
-    private ProviderVO providerVO;
+    private String protocol;
+    private String address;
+    private String group;
     private Date createTime;
     private Date updateTime;
 }

@@ -12,13 +12,11 @@
 
 <form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
     <div id="service-info">
-        <div>服务名：<input name="service-name" type="text" v-model="name" readonly /></div>
-        <div>协议：<input name="protocol" type="text" v-model="name" readonly /></div>
-        <div>Version：<input name="version" type="text" v-model="name" readonly /></div>
-        <div>Group：<input name="group" type="text" v-model="name" readonly /></div>
-        <select name="public-choice" v-model="providerSelected" @change="getProvider">
-            <option :value="provider.host" v-for="provider in providers" >{{ provider.methods[0] }}</option>
-        </select><br />
+        <select>
+            <option v-for="option in interfaceList" v-bind:value="option.value">
+                {{ option.text }}
+            </option>
+        </select>
         <input type="submit" value="调用" />
     </div>
 </form>
@@ -30,30 +28,14 @@
     new Vue({
         el: '#service-info',
         data: {
-            name: "${apiVO.providerVO.serviceName}",
-            providers: [
-                <#list apiVO.providerVO.providerDetailVOList as provider >
+            interfaceList: [
+                <#list interfaceList as interface >
                     {
-                        host: '${provider.host}',
-                        port: '${provider.port}',
-                        methods: [
-                            <#list provider.methods as method>
-                                '${method}',
-                            </#list>
-                        ]
-                    }
+                        text: '${interface.name}',
+                        value: '${interface.name}'
+                    },
                 </#list>
-            ],
-            providerSelected: ''
-        },
-        created() {
-            this.providerSelected = this.providers[0].host;
-        },
-        methods: {
-            getProvider() {
-                console.log(this.providerSelected)
-            }
-
+            ]
         }
     })
 </script>
