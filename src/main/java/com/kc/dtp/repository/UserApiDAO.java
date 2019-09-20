@@ -1,6 +1,6 @@
 package com.kc.dtp.repository;
 
-import com.kc.dtp.model.UserApi;
+import com.kc.dtp.bean.model.UserApi;
 import org.springframework.stereotype.Repository;
 
 /**

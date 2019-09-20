@@ -1,6 +1,5 @@
-package com.kc.dtp.model;
+package com.kc.dtp.bean.vo;
 
-import com.kc.dtp.bean.InterfaceVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,14 +11,13 @@ import java.util.Date;
  * @author: Kyle
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserApi {
-    private Long id;
-    private Long userId;
-    private String apiName;
-    private InterfaceVO interfaceVO;
+public class ApiVO {
+    private String protocol;
+    private String address;
+    private String group;
     private Date createTime;
     private Date updateTime;
 }

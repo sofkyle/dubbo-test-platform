@@ -1,7 +1,7 @@
 package com.kc.dtp.controller;
 
-import com.kc.dtp.bean.ApiVO;
-import com.kc.dtp.bean.InterfaceVO;
+import com.kc.dtp.bean.vo.ApiVO;
+import com.kc.dtp.bean.vo.InterfaceVO;
 import com.kc.dtp.common.ProviderService;
 import com.kc.dtp.service.ApiService;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author: Kyle
@@ -36,8 +35,7 @@ public class ApiController {
         String address = apiVO.getAddress();
         String group = apiVO.getGroup();
 
-        List<String> interfaceList = ProviderService.get(address)
-                .getProviders(protocol, address, group);
+        List<String> interfaceList = ProviderService.get(address).getProviders(protocol, address, group);
 
         List<InterfaceVO> interfaceVOList = new LinkedList<>();
         for (String itf : interfaceList) {

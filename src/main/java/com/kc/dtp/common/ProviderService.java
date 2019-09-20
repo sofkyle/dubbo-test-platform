@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -47,23 +48,18 @@ public class ProviderService implements Serializable {
     private static ConcurrentMap<String, ProviderService> cache = new ConcurrentHashMap<>();
 
     public static ProviderService get(String key) {
-        ProviderService service = cache.get(key);
-        if (service == null) {
-            cache.putIfAbsent(key, new ProviderService());
-            service = cache.get(key);
-        }
+        ProviderService service = cache.computeIfAbsent(key, k -> new ProviderService());
         return service;
     }
 
-    public Map<String, URL> findByService(String serviceName) {
-        return providerUrls == null ? null : providerUrls.get(serviceName);
+    public Map<String, URL> findUrlByServiceName(String serviceName) {
+        return Objects.isNull(providerUrls) ? null : providerUrls.get(serviceName);
     }
 
     public List<String> getProviders(String protocol, String address, String group) throws RuntimeException {
+        // get interfaces of the provider
         if (protocol.equals("zookeeper") || protocol.equals("redis")){
             return executeRegistry(protocol, address, group);
-//        } else if (protocol.equals("none")) {
-//            return executeTelnet();
         } else {
             throw new RuntimeException("Registry Protocol please use zookeeper or redis!");
         }
@@ -103,14 +99,16 @@ public class ProviderService implements Serializable {
                 }
             });
             RegistryService registryService = (RegistryService) cache.get(reference);
-            if (registryService == null) {
+            if (Objects.isNull(registryService)) {
                 throw new RuntimeException("Can't get the interface list, please check if the address is wrong!");
             }
             RegistryServerSync registryServerSync = RegistryServerSync.get(address + "_" + group);
             registryService.subscribe(RegistryServerSync.SUBSCRIBE, registryServerSync);
             List<String> ret = new ArrayList<String>();
             providerUrls = registryServerSync.getRegistryCache().get(com.alibaba.dubbo.common.Constants.PROVIDERS_CATEGORY);
-            if (providerUrls != null) ret.addAll(providerUrls.keySet());
+            if (Objects.isNull(providerUrls)) {
+                ret.addAll(providerUrls.keySet());
+            }
             return ret;
         } catch (Exception e) {
             log.error("get provider list is error!", e);
