@@ -1,9 +1,12 @@
 package com.kc.dtp.controller;
 
+import com.google.common.collect.Lists;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.InterfaceVO;
+import com.kc.dtp.common.InterfaceParser;
 import com.kc.dtp.common.ProviderService;
 import com.kc.dtp.service.ApiService;
+import org.apache.dubbo.common.URL;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Kyle
@@ -42,14 +46,22 @@ public class ApiController {
             interfaceVOList.add(InterfaceVO.builder().name(itf).build());
         }
 
+        model.addAttribute("address", address);
         model.addAttribute("interfaceList", interfaceVOList);
     }
 
     @GetMapping(value = "/getmethods")
     @ResponseBody
     public void getMethods(ApiVO apiVO, final Model model) {
+        String address = apiVO.getAddress();
+        String serviceName = apiVO.getServiceName();
 
-        model.addAttribute("methodList", new LinkedList<>());
+        ProviderService providerService = ProviderService.get(address);
+        Map<String, URL> provider = providerService.findUrlByServiceName(serviceName);
+        URL url = Lists.newArrayList(provider.values()).get(0);
+        InterfaceVO interfaceVO = InterfaceParser.parseUrl(url);
+
+        model.addAttribute("interfaceVO", interfaceVO);
     }
 
     @PostMapping(value = "/invoke")

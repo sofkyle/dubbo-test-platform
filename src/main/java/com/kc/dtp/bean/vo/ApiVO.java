@@ -18,6 +18,7 @@ public class ApiVO {
     private String protocol;
     private String address;
     private String group;
+    private String serviceName;
     private Date createTime;
     private Date updateTime;
 }

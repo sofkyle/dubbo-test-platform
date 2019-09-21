@@ -13,6 +13,7 @@
 
 <form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
     <div id="service-info">
+        <input name="address" type="hidden" value="${address}" />
         <select>
             <option v-for="option in interfaceList" v-bind:value="option.value" @change="getMethods(option.value)">
                 {{ option.text }}
