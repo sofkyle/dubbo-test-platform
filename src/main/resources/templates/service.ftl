@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -13,7 +14,7 @@
 <form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
     <div id="service-info">
         <select>
-            <option v-for="option in interfaceList" v-bind:value="option.value">
+            <option v-for="option in interfaceList" v-bind:value="option.value" @change="getMethods(option.value)">
                 {{ option.text }}
             </option>
         </select>
@@ -37,6 +38,18 @@
                 </#list>
             ]
         }
-    })
+    });
+
+    methods: {
+        getMethods: function(interface){
+            axios.post('/user', {
+                firstName: 'Fred',
+            }).then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
 </script>
 </html>

@@ -29,7 +29,7 @@ public class ApiController {
     }
 
     @PostMapping(value = "/search")
-    public String searchApi(ApiVO apiVO, final Model model) {
+    public void searchApi(ApiVO apiVO, final Model model) {
         model.addAttribute("apiVO", apiVO);
         String protocol = apiVO.getProtocol();
         String address = apiVO.getAddress();
@@ -43,8 +43,13 @@ public class ApiController {
         }
 
         model.addAttribute("interfaceList", interfaceVOList);
+    }
 
-        return "service";
+    @GetMapping(value = "/getmethods")
+    @ResponseBody
+    public void getMethods(ApiVO apiVO, final Model model) {
+
+        model.addAttribute("methodList", new LinkedList<>());
     }
 
     @PostMapping(value = "/invoke")
