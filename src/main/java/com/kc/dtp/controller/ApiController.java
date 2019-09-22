@@ -61,7 +61,7 @@ public class ApiController {
         URL url = Lists.newArrayList(provider.values()).get(0);
         InterfaceVO interfaceVO = InterfaceParser.parseUrl(url);
 
-        model.addAttribute("interfaceVO", interfaceVO);
+        model.addAttribute("methods", interfaceVO.getMethods());
     }
 
     @PostMapping(value = "/invoke")

@@ -13,7 +13,6 @@
 
 <form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
     <div id="service-info">
-        <input name="address" type="hidden" value="${address}" />
         <select>
             <option v-for="option in interfaceList" v-bind:value="option.value" @change="getMethods(option.value)">
                 {{ option.text }}
@@ -43,8 +42,9 @@
 
     methods: {
         getMethods: function(interface){
-            axios.post('/user', {
-                firstName: 'Fred',
+            axios.post('/api/getmethods', {
+                address: ${address},
+                serviceName: interface
             }).then(function (response) {
                 console.log(response);
             }).catch(function (error) {
