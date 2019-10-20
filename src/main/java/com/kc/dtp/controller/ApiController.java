@@ -1,5 +1,6 @@
 package com.kc.dtp.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.InterfaceVO;
@@ -28,12 +29,11 @@ public class ApiController {
 
     @GetMapping(value = "/list")
     public String list(@ModelAttribute Long userId) {
-
         return "list";
     }
 
     @PostMapping(value = "/search")
-    public void searchApi(ApiVO apiVO, final Model model) {
+    public String searchApi(ApiVO apiVO, final Model model) {
         model.addAttribute("apiVO", apiVO);
         String protocol = apiVO.getProtocol();
         String address = apiVO.getAddress();
@@ -48,11 +48,13 @@ public class ApiController {
 
         model.addAttribute("address", address);
         model.addAttribute("interfaceList", interfaceVOList);
+
+        return "service";
     }
 
-    @GetMapping(value = "/getmethods")
+    @GetMapping(value = "/method/list")
     @ResponseBody
-    public void getMethods(ApiVO apiVO, final Model model) {
+    public String listMethod(ApiVO apiVO) {
         String address = apiVO.getAddress();
         String serviceName = apiVO.getServiceName();
 
@@ -61,12 +63,12 @@ public class ApiController {
         URL url = Lists.newArrayList(provider.values()).get(0);
         InterfaceVO interfaceVO = InterfaceParser.parseUrl(url);
 
-        model.addAttribute("methods", interfaceVO.getMethods());
+        return JSON.toJSONString(interfaceVO.getMethods());
     }
 
     @PostMapping(value = "/invoke")
     @ResponseBody
-    public String invokeService(ApiVO apiVO, final Model model) {
+    public String invokeService(ApiVO apiVO) {
 
         return null;
     }

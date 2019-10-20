@@ -14,17 +14,17 @@
 <form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
     <div id="service-info">
         <select>
-            <option v-for="option in interfaceList" v-bind:value="option.value" @change="getMethods(option.value)">
+            <option v-for="option in interfaceList" v-bind:value="option.value">
                 {{ option.text }}
             </option>
         </select>
-        <input type="submit" value="调用" />
+        <input type="button" value="获取方法列表" @click="listMethod" />
+        <br />
+        <div id="method_div"></div>
     </div>
 </form>
 
 </body>
-
-<script src="js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
     new Vue({
         el: '#service-info',
@@ -32,25 +32,59 @@
             interfaceList: [
                 <#list interfaceList as interface >
                     {
-                        text: '${interface.name}',
-                        value: '${interface.name}'
+                        value: '${interface.name}',
+                        text: '${interface.name}'
                     },
                 </#list>
             ]
+        },
+        methods: {
+            listMethod: function (event) {
+                axios.get('/api/method/list', {
+                    params: {
+                        address: '${address}',
+                        serviceName: "org.apache.dubbo.demo.DemoService"
+                    }
+                })
+                        .then(function (response) {
+                            // if response successfully, split join items in methodList
+                            console.log(response);
+                            var data = response.data;
+                            var joinMethodList = new Array(data.length);
+                            for (var i = 0; i < data.length; i++) {
+                                var optionItem = {
+                                    value: data[i],
+                                    text: data[i]
+                                };
+                                joinMethodList[i] = optionItem;
+                            }
+                            var methodList = joinMethodList;
+                            console.log(methodList);
+
+                            new Vue({
+                                el: '#method_div',
+                                data: {
+                                    methodList: methodList
+                                },
+                                template: `<select id="method_select">
+                                                <option v-for="option in methodList" v-bind:value="option.value">
+                                                    {{ option.text }}
+                                                </option>
+                                            </select>
+                                            <input type="button" value="调用方法" @click="invoke" />
+                                            `,
+                                methods: {
+                                    invoke: function (event) {
+
+                                    }
+                                }
+                            });
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+            }
         }
     });
-
-    methods: {
-        getMethods: function(interface){
-            axios.post('/api/getmethods', {
-                address: ${address},
-                serviceName: interface
-            }).then(function (response) {
-                console.log(response);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    }
 </script>
 </html>
