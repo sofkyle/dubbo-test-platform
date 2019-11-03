@@ -15,10 +15,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiVO {
-    private String protocol;
+    private String registerProtocol;
     private String address;
     private String group;
+    private String rpcProtocol;
     private String serviceName;
+    private String methodName;
     private Date createTime;
     private Date updateTime;
 }

@@ -14,7 +14,7 @@
     <div id="app">
         <span>
             Protocol:
-            <select name="protocol" v-model="protocol" >
+            <select name="registerProtocol" v-model="registerProtocol" >
                 <option value="zookeeper">zookeeper</option>
                 <option value="multicast">multicast</option>
                 <option value="redis">redis</option>
@@ -39,7 +39,7 @@
         var app = new Vue({
             el: '#app',
             data: {
-                protocol: 'zookeeper',
+                registerProtocol: 'zookeeper',
                 address: '',
                 group: ''
             }

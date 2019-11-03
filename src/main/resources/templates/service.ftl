@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 
 <body>
@@ -20,12 +21,33 @@
         </select>
         <input type="button" value="获取方法列表" @click="listMethod" />
         <br />
-        <div id="method_div"></div>
+        <div id="method-div"></div>
     </div>
 </form>
 
 </body>
 <script type="text/javascript">
+    // todo: 构造参数组件
+    Vue.component('param-component', {
+        data: {
+          rowTemplate: '<tr><td><input type="text" placeholder="参数值" /></td></tr>'
+        },
+        template: `<table>
+                    <thead><th><td>参数类型</td><td>参数值</td></th></thead>
+                    <tbody id="param-row">
+                        <tr>
+                            <td><input type="text" placeholder="参数类型" /></td>
+                            <td><input type="text" placeholder="参数值" /></td>
+                        </tr>
+                    </tbody>
+                    </table>`,
+        methods: {
+            addRow: function () {
+                this
+            }
+        }
+    });
+
     new Vue({
         el: '#service-info',
         data: {
@@ -61,21 +83,35 @@
                             var methodList = joinMethodList;
                             console.log(methodList);
 
+                            <!-- TODO: 独立出“方法调用组件” -->
                             new Vue({
-                                el: '#method_div',
+                                el: '#method-div',
                                 data: {
                                     methodList: methodList
                                 },
-                                template: `<select id="method_select">
+                                template: `<div>
+                                            <select id="method-select">
                                                 <option v-for="option in methodList" v-bind:value="option.value">
                                                     {{ option.text }}
                                                 </option>
                                             </select>
-                                            <input type="button" value="调用方法" @click="invoke" />
-                                            `,
+                                            <param-component></param-component>
+                                            <input id="method-invoker-btn" type="button" value="调用方法" v-on:click="invoke" />
+                                            </div>`,
                                 methods: {
                                     invoke: function (event) {
+                                        axios.post('/api/invoke', {
+                                            params: {
+                                                address: '${address}',
+                                                serviceName: "org.apache.dubbo.demo.DemoService"
+                                            }
+                                        })
+                                                .then(function (response) {
 
+                                                })
+                                                .catch(function (error) {
+                                                    console.log(error);
+                                                });
                                     }
                                 }
                             });
