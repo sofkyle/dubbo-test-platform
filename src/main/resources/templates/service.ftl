@@ -90,24 +90,25 @@
                                     methodList: methodList
                                 },
                                 template: `<div>
-                                            <select id="method-select">
-                                                <option v-for="option in methodList" v-bind:value="option.value">
-                                                    {{ option.text }}
-                                                </option>
-                                            </select>
-                                            <param-component></param-component>
-                                            <input id="method-invoker-btn" type="button" value="调用方法" v-on:click="invoke" />
+                                                <select id="method-select">
+                                                    <option v-for="option in methodList" v-bind:value="option.value">
+                                                        {{ option.text }}
+                                                    </option>
+                                                </select>
+                                                <param-component></param-component>
+                                                <input id="method-invoker-btn" type="button" value="调用方法" v-on:click="invoke" />
                                             </div>`,
                                 methods: {
                                     invoke: function (event) {
-                                        axios.post('/api/invoke', {
+                                        axios.get('/api/method/invoke', {
                                             params: {
                                                 address: '${address}',
                                                 serviceName: "org.apache.dubbo.demo.DemoService"
                                             }
                                         })
                                                 .then(function (response) {
-
+                                                    // todo: 处理返回结果
+                                                    console.log(error);
                                                 })
                                                 .catch(function (error) {
                                                     console.log(error);

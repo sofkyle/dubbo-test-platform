@@ -70,23 +70,23 @@ public class ApiController {
         return JSON.toJSONString(interfaceVO.getMethods());
     }
 
-    @PostMapping(value = "/invoke")
+    @GetMapping(value = "/method/invoke")
     @ResponseBody
     public String invokeService(ApiVO apiVO) {
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
         // 1.1 应用名称
-        ApplicationConfig appConfig = new ApplicationConfig("generic-service-demo");
+        ApplicationConfig appConfig = new ApplicationConfig("generic-service-demo13");
         ref.setApplication(appConfig);
 
         // 1.2 注册中心配置
         RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setProtocol(apiVO.getRegisterProtocol());
+        registryConfig.setProtocol("zookeeper");
         registryConfig.setAddress(apiVO.getAddress());
         ref.setRegistry(registryConfig);
 
         // 1.3 接口名称
-        ref.setProtocol(apiVO.getRpcProtocol());
+        ref.setProtocol("dubbo");
         ref.setInterface(apiVO.getServiceName());
 
         // 1.4 泛化标识
@@ -95,7 +95,7 @@ public class ApiController {
         // 2 获取远程代理
         GenericService genericService = ref.get();
         // 3 执行泛化调用
-        Object result = genericService.$invoke(apiVO.getMethodName(),
+        Object result = genericService.$invoke("sayHello",
                 new String[]{"java.lang.String"},
                 new Object[]{"touna"});
 
