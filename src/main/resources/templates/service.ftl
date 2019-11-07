@@ -96,7 +96,9 @@
                                                     </option>
                                                 </select>
                                                 <param-component></param-component>
-                                                <input id="method-invoker-btn" type="button" value="调用方法" v-on:click="invoke" />
+                                                <input id="method-invoke-btn" type="button" value="调用方法" v-on:click="invoke" />
+                                                <br />
+                                                <textarea id="method-invoke-msg-txta" style="width: 100%;height: 400px;"/>
                                             </div>`,
                                 methods: {
                                     invoke: function (event) {
@@ -107,8 +109,8 @@
                                             }
                                         })
                                                 .then(function (response) {
-                                                    // todo: 处理返回结果
-                                                    console.log(error);
+                                                    let result = JSON.stringify(response.data, null, "\t");
+                                                    $("#method-invoke-msg-txta").val(result);
                                                 })
                                                 .catch(function (error) {
                                                     console.log(error);
