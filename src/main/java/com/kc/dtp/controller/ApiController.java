@@ -76,7 +76,7 @@ public class ApiController {
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
         // 1.1 应用名称
-        ApplicationConfig appConfig = new ApplicationConfig("generic-service-demo13");
+        ApplicationConfig appConfig = new ApplicationConfig("generic-service-demo");
         ref.setApplication(appConfig);
 
         // 1.2 注册中心配置
@@ -88,6 +88,7 @@ public class ApiController {
         // 1.3 接口名称
         ref.setProtocol("dubbo");
         ref.setInterface(apiVO.getServiceName());
+        ref.setGroup("test");
 
         // 1.4 泛化标识
         ref.setGeneric(true);
