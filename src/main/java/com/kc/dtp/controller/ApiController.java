@@ -52,6 +52,7 @@ public class ApiController {
 
         model.addAttribute("address", address);
         model.addAttribute("interfaceList", interfaceVOList);
+        model.addAttribute("group", group);
 
         return "service";
     }
@@ -76,19 +77,20 @@ public class ApiController {
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
         // 1.1 应用名称
-        ApplicationConfig appConfig = new ApplicationConfig("generic-service-demo");
+        ApplicationConfig appConfig = new ApplicationConfig("dsdfdsf.sf899");
         ref.setApplication(appConfig);
 
         // 1.2 注册中心配置
         RegistryConfig registryConfig = new RegistryConfig();
         registryConfig.setProtocol("zookeeper");
         registryConfig.setAddress(apiVO.getAddress());
+        registryConfig.setGroup(apiVO.getGroup());
         ref.setRegistry(registryConfig);
 
         // 1.3 接口名称
         ref.setProtocol("dubbo");
         ref.setInterface(apiVO.getServiceName());
-        ref.setGroup("test");
+        // ref.setGroup(apiVO.getGroup());
 
         // 1.4 泛化标识
         ref.setGeneric(true);
