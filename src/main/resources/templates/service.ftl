@@ -7,6 +7,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+            crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -114,14 +119,14 @@
                                                     $("#method-invoke-msg-txta").val(result);
                                                 })
                                                 .catch(function (error) {
-                                                    console.log(error);
+                                                    alert(error);
                                                 });
                                     }
                                 }
                             });
                         })
                         .catch(function (error) {
-                            console.log(error);
+                            alert(error);
                         });
             }
         }

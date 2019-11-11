@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.InterfaceVO;
+import com.kc.dtp.common.ApplicationConfigInstance;
 import com.kc.dtp.common.InterfaceParser;
 import com.kc.dtp.common.ProviderService;
 import com.kc.dtp.service.ApiService;
@@ -77,8 +78,7 @@ public class ApiController {
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
         // 1.1 应用名称
-        ApplicationConfig appConfig = new ApplicationConfig("dsdfdsf.sf899");
-        ref.setApplication(appConfig);
+        ref.setApplication(ApplicationConfigInstance.get());
 
         // 1.2 注册中心配置
         RegistryConfig registryConfig = new RegistryConfig();
