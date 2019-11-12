@@ -34,20 +34,41 @@
 <script type="text/javascript">
     // todo: 构造参数组件
     Vue.component('param-component', {
-        data: {
-          rowTemplate: '<tr><td><input type="text" placeholder="参数值" /></td></tr>'
+        data:{
+            trList: [
+                {
+                    paramType: '',
+                    paramValue: ''
+                }
+            ]
         },
-        template: `<table>
-                    <thead><th><td>参数类型</td><td>参数值</td></th></thead>
-                    <tbody id="param-row">
+        template: `<table id="param-row" cellspacing="10">
+                    <tbody>
+                        <tr>
+                            <td width="300px"><b>参数类型</b></td>
+                            <td><b>参数值</b></td>
+                        </tr>
                         <tr>
                             <td><input type="text" placeholder="参数类型" /></td>
                             <td><input type="text" placeholder="参数值" /></td>
+                            <td><input type="button" value="-" v-on:click="delRow" /></td>
+                        </tr>
+                        <tr id="add-btn">
+                            <td><input type="button" value="+" v-on:click="addRow" /></td>
                         </tr>
                     </tbody>
                     </table>`,
         methods: {
             addRow: function () {
+                let rowTemplate = `
+                                <tr>
+                                    <td><input type="text" placeholder="参数类型" /></td>
+                                    <td><input type="text" placeholder="参数值" /></td>
+                                    <td><input type="button" value="-" /></td>
+                                </tr>`;
+                $("#param-row tbody").children("tr[id!='add-btn']:last").after(rowTemplate);
+            },
+            delRow: function (obj) {
 
             }
         }
@@ -70,7 +91,7 @@
                 axios.get('/api/method/list', {
                     params: {
                         address: '${address}',
-                        serviceName: "org.apache.dubbo.demo.DemoService"
+                        serviceName: 'org.apache.dubbo.demo.DemoService'
                     }
                 })
                         .then(function (response) {
@@ -110,7 +131,7 @@
                                         axios.get('/api/method/invoke', {
                                             params: {
                                                 address: '${address}',
-                                                serviceName: "org.apache.dubbo.demo.DemoService",
+                                                serviceName: 'org.apache.dubbo.demo.DemoService',
                                                 group: '${group}'
                                             }
                                         })

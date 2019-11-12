@@ -15,6 +15,7 @@ import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -45,6 +46,11 @@ public class ApiController {
         String group = apiVO.getGroup();
 
         List<String> interfaceList = ProviderService.get(address).getProviders(protocol, address, group);
+
+        if (CollectionUtils.isEmpty(interfaceList)) {
+            model.addAttribute("errMsg", "服务不存在");
+            return "404";
+        }
 
         List<InterfaceVO> interfaceVOList = new LinkedList<>();
         for (String itf : interfaceList) {
