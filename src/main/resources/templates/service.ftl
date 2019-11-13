@@ -34,44 +34,23 @@
 <script type="text/javascript">
     // todo: 构造参数组件
     Vue.component('param-component', {
-        data:{
-            trList: [
-                {
-                    paramType: '',
-                    paramValue: ''
-                }
-            ]
-        },
-        template: `<table id="param-row" cellspacing="10">
+        props: ['paramList'],
+        template: `<table id="param-row" cellspacing="10"">
                     <tbody>
                         <tr>
                             <td width="300px"><b>参数类型</b></td>
                             <td><b>参数值</b></td>
                         </tr>
-                        <tr>
-                            <td><input type="text" placeholder="参数类型" /></td>
-                            <td><input type="text" placeholder="参数值" /></td>
-                            <td><input type="button" value="-" v-on:click="delRow" /></td>
+                        <tr v-for="(list,index) in paramList">
+                            <td><input type="text" placeholder="参数类型" v-bind:value="list.paramType" /></td>
+                            <td><input type="text" placeholder="参数值" v-bind:value="list.paramValue" /></td>
+                            <td><input type="button" value="-" v-on:click=delRow(index) /></td>
                         </tr>
                         <tr id="add-btn">
                             <td><input type="button" value="+" v-on:click="addRow" /></td>
                         </tr>
                     </tbody>
-                    </table>`,
-        methods: {
-            addRow: function () {
-                let rowTemplate = `
-                                <tr>
-                                    <td><input type="text" placeholder="参数类型" /></td>
-                                    <td><input type="text" placeholder="参数值" /></td>
-                                    <td><input type="button" value="-" /></td>
-                                </tr>`;
-                $("#param-row tbody").children("tr[id!='add-btn']:last").after(rowTemplate);
-            },
-            delRow: function (obj) {
-
-            }
-        }
+                    </table>`
     });
 
     new Vue({
@@ -113,7 +92,11 @@
                             new Vue({
                                 el: '#method-div',
                                 data: {
-                                    methodList: methodList
+                                    methodList: methodList,
+                                    paramList: [{
+                                            paramType: '',
+                                            paramValue: ''
+                                    }]
                                 },
                                 template: `<div>
                                                 <select id="method-select">
@@ -121,13 +104,36 @@
                                                         {{ option.text }}
                                                     </option>
                                                 </select>
-                                                <param-component></param-component>
+                                                <table id="param-row" cellspacing="10"">
+                                                <tbody>
+                                                    <tr>
+                                                        <td width="300px"><b>参数类型</b></td>
+                                                        <td><b>参数值</b></td>
+                                                    </tr>
+                                                    <tr v-for="(list,index) in paramList">
+                                                        <td><input type="text" placeholder="参数类型" v-bind:value="list.paramType" v-on:blur="editType(index, $event)" /></td>
+                                                        <td><input type="text" placeholder="参数值" v-bind:value="list.paramValue" v-on:blur="editValue(index, $event)" /></td>
+                                                        <td><input type="button" value="-" v-on:click=delRow(index) /></td>
+                                                    </tr>
+                                                    <tr id="add-btn">
+                                                        <td><input type="button" value="+" v-on:click="addRow" /></td>
+                                                    </tr>
+                                                </tbody>
+                                                </table>
                                                 <input id="method-invoke-btn" type="button" value="调用方法" v-on:click="invoke" />
                                                 <br />
                                                 <textarea id="method-invoke-msg-txta" style="width: 100%;height: 400px;"/>
                                             </div>`,
                                 methods: {
                                     invoke: function (event) {
+                                        // check param
+                                        for (let i = 0; i < this.paramList.length; i++) {
+                                            if (this.paramList[i].paramType.length == 0 || this.paramList[i].paramValue.length == 0) {
+                                                alert("参数配置非法");
+                                                return;
+                                            }
+                                        }
+
                                         axios.get('/api/method/invoke', {
                                             params: {
                                                 address: '${address}',
@@ -142,6 +148,21 @@
                                                 .catch(function (error) {
                                                     alert(error);
                                                 });
+                                    },
+                                    editType: function(index, event) {
+                                        this.paramList[index].paramType = event.currentTarget.value;
+                                    },
+                                    editValue: function(index, event) {
+                                        this.paramList[index].paramValue = event.currentTarget.value;
+                                    },
+                                    addRow: function () {
+                                        this.paramList.push({
+                                            paramType: '',
+                                            paramValue: ''
+                                        });
+                                    },
+                                    delRow: function (index) {
+                                        this.paramList.splice(index, 1);
                                     }
                                 }
                             });
