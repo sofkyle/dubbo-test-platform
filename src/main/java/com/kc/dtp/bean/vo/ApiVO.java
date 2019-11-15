@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: Kyle
@@ -21,6 +22,7 @@ public class ApiVO {
     private String rpcProtocol;
     private String serviceName;
     private String methodName;
+    private List<ParamVO> paramList;
     private Date createTime;
     private Date updateTime;
 }

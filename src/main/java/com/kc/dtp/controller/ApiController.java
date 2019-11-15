@@ -1,27 +1,32 @@
 package com.kc.dtp.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.InterfaceVO;
+import com.kc.dtp.bean.vo.ParamVO;
 import com.kc.dtp.common.ApplicationConfigInstance;
 import com.kc.dtp.common.InterfaceParser;
 import com.kc.dtp.common.ProviderService;
 import com.kc.dtp.service.ApiService;
 import org.apache.dubbo.common.URL;
-import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author: Kyle
@@ -80,7 +85,16 @@ public class ApiController {
 
     @GetMapping(value = "/method/invoke")
     @ResponseBody
-    public String invokeService(ApiVO apiVO) {
+    public String invokeService(ServerWebExchange exchange) {
+        MultiValueMap<String, String> queryParams = exchange.getRequest().getQueryParams();
+        String address = queryParams.get("address").get(0);
+        String serviceName = queryParams.get("serviceName").get(0);
+        String group = queryParams.get("group").get(0);
+        List<String> paramListStr = queryParams.get("paramList[]");
+        List<ParamVO> paramList = paramListStr.stream()
+                .map(param -> JSONObject.parseObject(param, new TypeReference<ParamVO>() {}))
+                .collect(Collectors.toList());
+
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
         // 1.1 应用名称
@@ -89,13 +103,13 @@ public class ApiController {
         // 1.2 注册中心配置
         RegistryConfig registryConfig = new RegistryConfig();
         registryConfig.setProtocol("zookeeper");
-        registryConfig.setAddress(apiVO.getAddress());
-        registryConfig.setGroup(apiVO.getGroup());
+        registryConfig.setAddress(address);
+        registryConfig.setGroup(group);
         ref.setRegistry(registryConfig);
 
         // 1.3 接口名称
         ref.setProtocol("dubbo");
-        ref.setInterface(apiVO.getServiceName());
+        ref.setInterface(serviceName);
         // ref.setGroup(apiVO.getGroup());
 
         // 1.4 泛化标识

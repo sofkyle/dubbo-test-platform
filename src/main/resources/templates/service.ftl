@@ -126,19 +126,29 @@
                                             </div>`,
                                 methods: {
                                     invoke: function (event) {
+                                        let paramLArray = new Array(this.paramList.length + 1);
+
                                         // check param
                                         for (let i = 0; i < this.paramList.length; i++) {
                                             if (this.paramList[i].paramType.length == 0 || this.paramList[i].paramValue.length == 0) {
                                                 alert("参数配置非法");
                                                 return;
                                             }
+                                            let param = {
+                                                type: this.paramList[i].paramType,
+                                                value: this.paramList[i].paramValue
+                                            };
+                                            paramLArray[i] = param;
+                                            paramLArray[i+1] = param;
                                         }
+                                        console.log(paramLArray);
 
                                         axios.get('/api/method/invoke', {
                                             params: {
                                                 address: '${address}',
                                                 serviceName: 'org.apache.dubbo.demo.DemoService',
-                                                group: '${group}'
+                                                group: '${group}',
+                                                paramList: paramLArray
                                             }
                                         })
                                                 .then(function (response) {
