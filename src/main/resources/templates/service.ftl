@@ -126,7 +126,7 @@
                                             </div>`,
                                 methods: {
                                     invoke: function (event) {
-                                        let paramLArray = new Array(this.paramList.length + 1);
+                                        let paramLArray = new Array(this.paramList.length);
 
                                         // check param
                                         for (let i = 0; i < this.paramList.length; i++) {
@@ -139,7 +139,6 @@
                                                 value: this.paramList[i].paramValue
                                             };
                                             paramLArray[i] = param;
-                                            paramLArray[i+1] = param;
                                         }
                                         console.log(paramLArray);
 
