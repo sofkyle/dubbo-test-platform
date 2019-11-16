@@ -109,6 +109,7 @@ public class ApiController {
                     .map(paramVO -> paramVO.getValue())
                     .collect(Collectors.toList()).toArray(valueList);
         }
+        String methodName =  queryParams.get("methodName").get(0);
 
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
@@ -133,7 +134,7 @@ public class ApiController {
         // 2 获取远程代理
         GenericService genericService = ref.get();
         // 3 执行泛化调用
-        Object result = genericService.$invoke("sayHello", typeList, valueList);
+        Object result = genericService.$invoke(methodName, typeList, valueList);
 
         return JSON.toJSONString(result);
     }

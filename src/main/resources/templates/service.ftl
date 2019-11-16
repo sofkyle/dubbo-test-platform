@@ -93,13 +93,11 @@
                                 el: '#method-div',
                                 data: {
                                     methodList: methodList,
-                                    paramList: [{
-                                            paramType: '',
-                                            paramValue: ''
-                                    }]
+                                    paramList: [],
+                                    methodName: methodList[0].value
                                 },
                                 template: `<div>
-                                                <select id="method-select">
+                                                <select id="method-select" v-model="methodName">
                                                     <option v-for="option in methodList" v-bind:value="option.value">
                                                         {{ option.text }}
                                                     </option>
@@ -126,12 +124,16 @@
                                             </div>`,
                                 methods: {
                                     invoke: function (event) {
-                                        let paramLArray = new Array(this.paramList.length);
+                                        // check method name
+                                        if (this.methodName == '') {
+                                            alert("请选择要调用的方法！");
+                                        }
 
                                         // check param
+                                        let paramLArray = new Array(this.paramList.length);
                                         for (let i = 0; i < this.paramList.length; i++) {
                                             if (this.paramList[i].paramType.length == 0 || this.paramList[i].paramValue.length == 0) {
-                                                alert("参数配置非法");
+                                                alert("参数配置非法！");
                                                 return;
                                             }
                                             let param = {
@@ -147,6 +149,7 @@
                                                 protocol: '${protocol}',
                                                 address: '${address}',
                                                 serviceName: 'org.apache.dubbo.demo.DemoService',
+                                                methodName: this.methodName,
                                                 group: '${group}',
                                                 paramList: paramLArray
                                             }
