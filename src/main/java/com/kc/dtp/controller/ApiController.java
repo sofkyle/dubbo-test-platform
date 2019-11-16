@@ -62,6 +62,7 @@ public class ApiController {
             interfaceVOList.add(InterfaceVO.builder().name(itf).build());
         }
 
+        model.addAttribute("protocol", protocol);
         model.addAttribute("address", address);
         model.addAttribute("interfaceList", interfaceVOList);
         model.addAttribute("group", group);
@@ -87,13 +88,27 @@ public class ApiController {
     @ResponseBody
     public String invokeService(ServerWebExchange exchange) {
         MultiValueMap<String, String> queryParams = exchange.getRequest().getQueryParams();
+        String protocol = queryParams.get("protocol").get(0);
         String address = queryParams.get("address").get(0);
         String serviceName = queryParams.get("serviceName").get(0);
         String group = queryParams.get("group").get(0);
         List<String> paramListStr = queryParams.get("paramList[]");
-        List<ParamVO> paramList = paramListStr.stream()
-                .map(param -> JSONObject.parseObject(param, new TypeReference<ParamVO>() {}))
-                .collect(Collectors.toList());
+        List<ParamVO> paramList = null;
+        String[] typeList = null;
+        Object[] valueList = null;
+        if (!CollectionUtils.isEmpty(paramListStr)) {
+            paramList = paramListStr.stream()
+                    .map(param -> JSONObject.parseObject(param, new TypeReference<ParamVO>() {}))
+                    .collect(Collectors.toList());
+            typeList = new String[paramList.size()];
+            typeList = paramList.stream()
+                    .map(paramVO -> paramVO.getType())
+                    .collect(Collectors.toList()).toArray(typeList);
+            valueList = new String[paramList.size()];
+            valueList = paramList.stream()
+                    .map(paramVO -> paramVO.getValue())
+                    .collect(Collectors.toList()).toArray(valueList);
+        }
 
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
 
@@ -102,7 +117,7 @@ public class ApiController {
 
         // 1.2 注册中心配置
         RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setProtocol("zookeeper");
+        registryConfig.setProtocol(protocol);
         registryConfig.setAddress(address);
         registryConfig.setGroup(group);
         ref.setRegistry(registryConfig);
@@ -118,9 +133,7 @@ public class ApiController {
         // 2 获取远程代理
         GenericService genericService = ref.get();
         // 3 执行泛化调用
-        Object result = genericService.$invoke("sayHello",
-                new String[]{"java.lang.String"},
-                new Object[]{"touna"});
+        Object result = genericService.$invoke("sayHello", typeList, valueList);
 
         return JSON.toJSONString(result);
     }

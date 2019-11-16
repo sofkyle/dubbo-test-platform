@@ -144,6 +144,7 @@
 
                                         axios.get('/api/method/invoke', {
                                             params: {
+                                                protocol: '${protocol}',
                                                 address: '${address}',
                                                 serviceName: 'org.apache.dubbo.demo.DemoService',
                                                 group: '${group}',
