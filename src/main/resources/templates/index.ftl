@@ -27,7 +27,7 @@
         </span><br />
         <span>
             Group:
-            <input name="group" type="text" v-model="group" />
+            <input name="registryGroup" type="text" v-model="registryGroup" />
         </span><br />
         <input name="searchApiBtn" type="submit" value="获取服务列表" />
     </div>
@@ -41,7 +41,7 @@
             data: {
                 registerProtocol: 'zookeeper',
                 address: '',
-                group: ''
+                registryGroup: ''
             }
         });
     }

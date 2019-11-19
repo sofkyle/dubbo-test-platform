@@ -19,7 +19,7 @@
 <form action="/api/invoke" method="post" content="application/x-www-form-urlencoded">
 
     <div id="service-info">
-        <select>
+        <select v-model="serviceName">
             <option v-for="option in interfaceList" v-bind:value="option.value">
                 {{ option.text }}
             </option>
@@ -63,14 +63,15 @@
                         text: '${interface.name}'
                     },
                 </#list>
-            ]
+            ],
+            serviceName: ''
         },
         methods: {
             listMethod: function (event) {
                 axios.get('/api/method/list', {
                     params: {
                         address: '${address}',
-                        serviceName: 'org.apache.dubbo.demo.DemoService'
+                        serviceName: this.serviceName
                     }
                 })
                         .then(function (response) {
@@ -150,7 +151,7 @@
                                                 address: '${address}',
                                                 serviceName: 'org.apache.dubbo.demo.DemoService',
                                                 methodName: this.methodName,
-                                                group: '${group}',
+                                                registryGroup: '${registryGroup}',
                                                 paramList: paramLArray
                                             }
                                         })

@@ -48,9 +48,9 @@ public class ApiController {
         model.addAttribute("apiVO", apiVO);
         String protocol = apiVO.getRegisterProtocol();
         String address = apiVO.getAddress();
-        String group = apiVO.getGroup();
+        String registryGroup = apiVO.getRegistryGroup();
 
-        List<String> interfaceList = ProviderService.get(address).getProviders(protocol, address, group);
+        List<String> interfaceList = ProviderService.get(address).getProviders(protocol, address, registryGroup);
 
         if (CollectionUtils.isEmpty(interfaceList)) {
             model.addAttribute("errMsg", "服务不存在");
@@ -65,7 +65,7 @@ public class ApiController {
         model.addAttribute("protocol", protocol);
         model.addAttribute("address", address);
         model.addAttribute("interfaceList", interfaceVOList);
-        model.addAttribute("group", group);
+        model.addAttribute("registryGroup", registryGroup);
 
         return "service";
     }
@@ -91,7 +91,7 @@ public class ApiController {
         String protocol = queryParams.get("protocol").get(0);
         String address = queryParams.get("address").get(0);
         String serviceName = queryParams.get("serviceName").get(0);
-        String group = queryParams.get("group").get(0);
+        String registryGroup = queryParams.get("registryGroup").get(0);
         List<String> paramListStr = queryParams.get("paramList[]");
         List<ParamVO> paramList = null;
         String[] typeList = null;
@@ -109,10 +109,13 @@ public class ApiController {
                     .map(paramVO -> paramVO.getValue())
                     .collect(Collectors.toList()).toArray(valueList);
         }
-        String methodName =  queryParams.get("methodName").get(0);
+        String methodName = queryParams.get("methodName").get(0);
+        String methodGroup = methodName.substring(0, methodName.indexOf("/") + 1);
+        if (!methodGroup.isEmpty()) {
+            methodName = methodName.substring(methodName.indexOf("/"));
+        }
 
         ReferenceConfig<GenericService> ref = new ReferenceConfig<GenericService>();
-
         // 1.1 应用名称
         ref.setApplication(ApplicationConfigInstance.get());
 
@@ -120,13 +123,15 @@ public class ApiController {
         RegistryConfig registryConfig = new RegistryConfig();
         registryConfig.setProtocol(protocol);
         registryConfig.setAddress(address);
-        registryConfig.setGroup(group);
+        registryConfig.setGroup(registryGroup);
         ref.setRegistry(registryConfig);
 
         // 1.3 接口名称
         ref.setProtocol("dubbo");
         ref.setInterface(serviceName);
-        // ref.setGroup(apiVO.getGroup());
+        if (!methodGroup.isEmpty()) {
+            ref.setGroup(methodName);
+        }
 
         // 1.4 泛化标识
         ref.setGeneric(true);

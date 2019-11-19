@@ -18,7 +18,7 @@ import java.util.List;
 public class ApiVO {
     private String registerProtocol;
     private String address;
-    private String group;
+    private String registryGroup;
     private String rpcProtocol;
     private String serviceName;
     private String methodName;
