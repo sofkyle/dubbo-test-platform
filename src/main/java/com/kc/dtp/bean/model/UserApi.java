@@ -1,6 +1,6 @@
 package com.kc.dtp.bean.model;
 
-import com.kc.dtp.bean.vo.InterfaceVO;
+import com.kc.dtp.bean.vo.ServiceVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class UserApi {
     private Long id;
     private Long userId;
     private String apiName;
-    private InterfaceVO interfaceVO;
+    private ServiceVO interfaceVO;
     private Date createTime;
     private Date updateTime;
 }

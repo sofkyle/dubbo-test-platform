@@ -1,15 +1,14 @@
 package com.kc.dtp.common;
 
-import com.kc.dtp.bean.vo.InterfaceVO;
+import com.kc.dtp.bean.vo.ServiceVO;
 import org.apache.dubbo.common.URL;
 import static com.alibaba.dubbo.common.Constants.*;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.Map;
 
 public class InterfaceParser {
 
-    public static InterfaceVO parseUrl(URL url) {
+    public static ServiceVO parseUrl(URL url) {
         String group = url.getParameter(GROUP_KEY);
         String version = url.getParameter(VERSION_KEY);
         String timeout = url.getParameter(TIMEOUT_KEY);
@@ -17,7 +16,7 @@ public class InterfaceParser {
         String interfaceName = url.getServiceInterface();
         String method = url.getParameter(METHODS_KEY);
 
-        return InterfaceVO.builder()
+        return ServiceVO.builder()
                 .group(group)
                 .version(version)
                 .timeout(timeout)

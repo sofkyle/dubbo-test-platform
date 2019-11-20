@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class InterfaceVO {
+public class ServiceVO {
     private String name;
     private String protocol;
     private String group;

@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimaps;
 import com.kc.dtp.bean.vo.ApiVO;
-import com.kc.dtp.bean.vo.InterfaceVO;
 import com.kc.dtp.bean.vo.ParamVO;
+import com.kc.dtp.bean.vo.ServiceVO;
 import com.kc.dtp.common.ApplicationConfigInstance;
 import com.kc.dtp.common.InterfaceParser;
 import com.kc.dtp.common.ProviderService;
@@ -18,12 +19,12 @@ import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 
 import javax.annotation.Resource;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,21 +51,34 @@ public class ApiController {
         String address = apiVO.getAddress();
         String registryGroup = apiVO.getRegistryGroup();
 
-        List<String> interfaceList = ProviderService.get(address).getProviders(protocol, address, registryGroup);
+        List<String> serviceList = ProviderService.get(address).getProviders(protocol, address, registryGroup);
 
-        if (CollectionUtils.isEmpty(interfaceList)) {
+        if (CollectionUtils.isEmpty(serviceList)) {
             model.addAttribute("errMsg", "服务不存在");
             return "404";
         }
 
-        List<InterfaceVO> interfaceVOList = new LinkedList<>();
-        for (String itf : interfaceList) {
-            interfaceVOList.add(InterfaceVO.builder().name(itf).build());
+
+        // 按组区分服务
+        MultiValueMap serviceGroupList = new LinkedMultiValueMap();
+        for (String service : serviceList) {
+            int index = service.indexOf("/");
+            String groupKey;
+            String name;
+            if (index >= 0) {
+                groupKey = service.substring(0, index);
+                name = service.substring(index + 1);
+            } else {
+                groupKey = "#";
+                name = service;
+            }
+
+            serviceGroupList.add(groupKey, name);
         }
 
         model.addAttribute("protocol", protocol);
         model.addAttribute("address", address);
-        model.addAttribute("interfaceList", interfaceVOList);
+        model.addAttribute("serviceList", serviceGroupList);
         model.addAttribute("registryGroup", registryGroup);
 
         return "service";
@@ -79,7 +93,7 @@ public class ApiController {
         ProviderService providerService = ProviderService.get(address);
         Map<String, URL> provider = providerService.findUrlByServiceName(serviceName);
         URL url = Lists.newArrayList(provider.values()).get(0);
-        InterfaceVO interfaceVO = InterfaceParser.parseUrl(url);
+        ServiceVO interfaceVO = InterfaceParser.parseUrl(url);
 
         return JSON.toJSONString(interfaceVO.getMethods());
     }
