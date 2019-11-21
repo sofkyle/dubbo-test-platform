@@ -39,6 +39,7 @@
                 },
                 </#list>
             ],
+            groupName: '',
             serviceList: [],
             serviceName: ''
         },
@@ -59,6 +60,7 @@
                     params: {
                         address: '${address}',
                         serviceName: this.serviceName
+
                     }
                 })
                     .then(function (response) {

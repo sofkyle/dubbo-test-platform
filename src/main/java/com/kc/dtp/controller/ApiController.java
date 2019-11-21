@@ -68,11 +68,10 @@ public class ApiController {
             String name;
             if (index >= 0) {
                 groupKey = service.substring(0, index);
-                name = service.substring(index + 1);
             } else {
                 groupKey = "#";
-                name = service;
             }
+            name = service;
 
             List<String> methodList = serviceGroupList.get(groupKey);
             if (CollectionUtils.isEmpty(methodList)) {

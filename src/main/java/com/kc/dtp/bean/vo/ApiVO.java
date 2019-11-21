@@ -20,6 +20,7 @@ public class ApiVO {
     private String address;
     private String registryGroup;
     private String rpcProtocol;
+    private String serviceGroup;
     private String serviceName;
     private String methodName;
     private List<ParamVO> paramList;
