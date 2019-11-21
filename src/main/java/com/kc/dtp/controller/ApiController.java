@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.ParamVO;
@@ -60,7 +61,7 @@ public class ApiController {
 
 
         // 按组区分服务
-        MultiValueMap serviceGroupList = new LinkedMultiValueMap();
+        Map<String, List<String>> serviceGroupList = Maps.newHashMap();
         for (String service : serviceList) {
             int index = service.indexOf("/");
             String groupKey;
@@ -73,12 +74,22 @@ public class ApiController {
                 name = service;
             }
 
-            serviceGroupList.add(groupKey, name);
+            List<String> methodList = serviceGroupList.get(groupKey);
+            if (CollectionUtils.isEmpty(methodList)) {
+                methodList = Lists.newLinkedList();
+            }
+            methodList.add(name);
+            serviceGroupList.put(groupKey, methodList);
+        }
+        // 将方法列表转为数组，方便前端处理
+        Map<String, String> serviceGroupStrList = Maps.newHashMap();
+        for (Map.Entry<String, List<String>> entry : serviceGroupList.entrySet()) {
+            serviceGroupStrList.put(entry.getKey(), JSON.toJSONString(entry.getValue()));
         }
 
         model.addAttribute("protocol", protocol);
         model.addAttribute("address", address);
-        model.addAttribute("serviceList", serviceGroupList);
+        model.addAttribute("serviceGroupStrList", serviceGroupStrList);
         model.addAttribute("registryGroup", registryGroup);
 
         return "service";
@@ -107,7 +118,7 @@ public class ApiController {
         String serviceName = queryParams.get("serviceName").get(0);
         String registryGroup = queryParams.get("registryGroup").get(0);
         List<String> paramListStr = queryParams.get("paramList[]");
-        List<ParamVO> paramList = null;
+        List<ParamVO> paramList;
         String[] typeList = null;
         Object[] valueList = null;
         if (!CollectionUtils.isEmpty(paramListStr)) {
