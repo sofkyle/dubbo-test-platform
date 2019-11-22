@@ -45,7 +45,8 @@
             methodList: [],
             methodName: '',
             paramList: [],
-            selectedTab: ''
+            selectedTab: '',
+            invokeResult: ''
         },
         methods: {
             clickTab(target) {
@@ -59,6 +60,9 @@
                 });
             },
             async listMethod() {
+                if (this.serviceName == "") {
+                    return;
+                }
                 let methodList = [];
                 await axios.get('/api/method/list', {
                     params: {
@@ -97,6 +101,7 @@
                 }
                 console.log(paramLArray);
 
+                let result = '';
                 await axios.get('/api/method/invoke', {
                     params: {
                         protocol: '${protocol}',
@@ -108,12 +113,12 @@
                     }
                 })
                     .then(function (response) {
-                        let result = JSON.stringify(response.data, null, "\t");
-                        $("#method-invoke-msg-txta").val(result);
+                        result = JSON.stringify(response.data, null, "\t");
                     })
                     .catch(function (error) {
                         alert(error);
                     });
+                this.invokeResult = result;
             },
             editType(index, event) {
                 this.paramList[index].paramType = event.currentTarget.value;
@@ -139,15 +144,13 @@
                 :label="item.title"
                 :name="item.name">
 
-                <el-select v-model="serviceName" filterable placeholder="请选择接口">
+                <el-select v-model="serviceName" filterable @change="listMethod" placeholder="请选择接口">
                     <el-option v-for="service in serviceList"
                     :key="service"
                     :label="service"
                     :value="service">
                     </el-option>
                 </el-select>
-                <input type="button" value="获取方法列表" @click="listMethod" />
-                <br />
 
                 <el-select v-model="methodName" placeholder="请选择方法">
                     <el-option
@@ -176,7 +179,12 @@
                 </table>
                 <input id="method-invoke-btn" type="button" value="调用方法" v-on:click="invoke" />
                 <br />
-                <textarea id="method-invoke-msg-txta" style="width: 100%;height: 400px;"/>
+
+                <el-input
+                  type="textarea"
+                  placeholder="结果"
+                  v-model="invokeResult">
+                </el-input>
 
                 </el-tab-pane>
             </el-tabs>

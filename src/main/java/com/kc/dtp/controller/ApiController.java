@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.ParamVO;
 import com.kc.dtp.bean.vo.ServiceVO;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +49,8 @@ public class ApiController {
     public String list(@ModelAttribute Long userId) {
         return "list";
     }
+
+    private static final Gson gson = new Gson();
 
     @PostMapping(value = "/search")
     public String searchApi(ApiVO apiVO, final Model model) {
@@ -128,10 +135,12 @@ public class ApiController {
             typeList = paramList.stream()
                     .map(paramVO -> paramVO.getType())
                     .collect(Collectors.toList()).toArray(typeList);
-            valueList = new String[paramList.size()];
-            valueList = paramList.stream()
-                    .map(paramVO -> paramVO.getValue())
-                    .collect(Collectors.toList()).toArray(valueList);
+            List<Object> valueTmpList = new ArrayList<>();
+            for (int i = 0; i < paramList.size(); i++) {
+                Object obj = JSONObject.parseObject(paramList.get(i).getValue(), new TypeToken<HashMap<String, Object>>() {}.getType());
+                valueTmpList.add(obj);
+            }
+            valueList = valueTmpList.toArray();
         }
         String methodName = queryParams.get("methodName").get(0);
         String serviceGroup = serviceName.substring(0, serviceName.indexOf("/"));
@@ -163,7 +172,7 @@ public class ApiController {
         // 2 获取远程代理
         GenericService genericService = ref.get();
         // 3 执行泛化调用
-        Object result = "";
+        Object result = "调用失败";
         try {
             result = genericService.$invoke(methodName, typeList, valueList);
         } catch (Exception e) {
