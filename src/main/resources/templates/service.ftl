@@ -161,29 +161,51 @@
                     </el-option>
                 </el-select>
 
-                <table id="param-row" cellspacing="10"">
-                <tbody>
-                    <tr>
-                        <td width="300px"><b>参数类型</b></td>
-                        <td><b>参数值</b></td>
-                    </tr>
-                    <tr v-for="(list,index) in paramList">
-                        <td><input type="text" placeholder="参数类型" v-bind:value="list.paramType" v-on:blur="editType(index, $event)" /></td>
-                        <td><input type="text" placeholder="参数值" v-bind:value="list.paramValue" v-on:blur="editValue(index, $event)" /></td>
-                        <td><input type="button" value="-" v-on:click=delRow(index) /></td>
-                    </tr>
-                    <tr id="add-btn">
-                        <td><input type="button" value="+" v-on:click="addRow" /></td>
-                    </tr>
-                </tbody>
-                </table>
-                <input id="method-invoke-btn" type="button" value="调用方法" v-on:click="invoke" />
+                <el-table
+                :data="paramList"
+                border
+                style="width: 100%">
+                    <el-table-column
+                    prop="paramType"
+                    label="参数类型"
+                    width="300">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.paramType" placeholder="请输入参数类型"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    prop="paramValue"
+                    label="参数值"
+                    width="300">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.paramValue" placeholder="请输入参数值"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="操作"
+                    width="120">
+                        <template slot-scope="scope">
+                            <el-button
+                            size="mini"
+                            @click="delRow(scope.$index)">-</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-button
+                size="mini"
+                @click="addRow()">+</el-button>
                 <br />
 
+                <el-button
+                size="mini"
+                @click="invoke()">调用方法</el-button>
+
                 <el-input
-                  type="textarea"
-                  placeholder="结果"
-                  v-model="invokeResult">
+                autosize
+                type="textarea"
+                placeholder="结果"
+                v-model="invokeResult">
                 </el-input>
 
                 </el-tab-pane>
