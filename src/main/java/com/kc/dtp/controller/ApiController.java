@@ -12,10 +12,12 @@ import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.ParamVO;
 import com.kc.dtp.bean.vo.ServiceVO;
 import com.kc.dtp.common.ApplicationConfigInstance;
+import com.kc.dtp.common.ClassUtils;
 import com.kc.dtp.common.InterfaceParser;
 import com.kc.dtp.common.ProviderService;
 import com.kc.dtp.service.ApiService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
@@ -125,22 +127,17 @@ public class ApiController {
         String registryGroup = queryParams.get("registryGroup").get(0);
         List<String> paramListStr = queryParams.get("paramList[]");
         List<ParamVO> paramList;
-        String[] typeList = null;
-        Object[] valueList = null;
+        String[] typeArray = null;
+        Object[] valueArray = null;
         if (!CollectionUtils.isEmpty(paramListStr)) {
             paramList = paramListStr.stream()
                     .map(param -> JSONObject.parseObject(param, new TypeReference<ParamVO>() {}))
                     .collect(Collectors.toList());
-            typeList = new String[paramList.size()];
-            typeList = paramList.stream()
-                    .map(paramVO -> paramVO.getType())
-                    .collect(Collectors.toList()).toArray(typeList);
-            List<Object> valueTmpList = new ArrayList<>();
-            for (int i = 0; i < paramList.size(); i++) {
-                Object obj = JSONObject.parseObject(paramList.get(i).getValue(), new TypeToken<HashMap<String, Object>>() {}.getType());
-                valueTmpList.add(obj);
-            }
-            valueList = valueTmpList.toArray();
+
+            Pair<List<String>, List<Object>> typeValuePair = ClassUtils.parseParameter(paramList);
+
+            typeArray = typeValuePair.getLeft().toArray(new String[typeValuePair.getLeft().size()]);
+            valueArray = typeValuePair.getRight().toArray();
         }
         String methodName = queryParams.get("methodName").get(0);
         String serviceGroup = serviceName.substring(0, serviceName.indexOf("/"));
@@ -174,7 +171,7 @@ public class ApiController {
         // 3 执行泛化调用
         Object result = "调用失败";
         try {
-            result = genericService.$invoke(methodName, typeList, valueList);
+            result = genericService.$invoke(methodName, typeArray, valueArray);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

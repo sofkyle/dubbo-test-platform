@@ -51,14 +51,9 @@ public class RegistryServerSync implements NotifyListener, Serializable {
             Constants.VERSION_KEY, Constants.ANY_VALUE,
             Constants.CLASSIFIER_KEY, Constants.ANY_VALUE,
             Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY,
-//            Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY + ","
-//            + Constants.CONSUMERS_CATEGORY + ","
-//            + Constants.ROUTERS_CATEGORY + ","
-//            + Constants.CONFIGURATORS_CATEGORY,
             Constants.ENABLED_KEY, Constants.ANY_VALUE,
             Constants.CHECK_KEY, String.valueOf(false));
 
-    // ConcurrentMap<category, ConcurrentMap<servicename, Map<MD5, URL>>>
     private final ConcurrentMap<String, ConcurrentMap<String, Map<String, URL>>>
             registryCache = new ConcurrentHashMap<>();
     /**
@@ -83,7 +78,8 @@ public class RegistryServerSync implements NotifyListener, Serializable {
         String interfaceName = null;
         for (URL url : urls) {
             String category = url.getParameter(Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY);
-            if (Constants.EMPTY_PROTOCOL.equalsIgnoreCase(url.getProtocol())) { // NOTE: group and version in empty protocol is *
+            // NOTE: group and version in empty protocol is *
+            if (Constants.EMPTY_PROTOCOL.equalsIgnoreCase(url.getProtocol())) {
                 ConcurrentMap<String, Map<String, URL>> services = registryCache.get(category);
                 if (services != null) {
                     String group = url.getParameter(Constants.GROUP_KEY);
@@ -137,7 +133,8 @@ public class RegistryServerSync implements NotifyListener, Serializable {
             if (services == null) {
                 services = new ConcurrentHashMap<String, Map<String, URL>>();
                 registryCache.put(category, services);
-            } else {// Fix map can not be cleared when service is unregistered: when a unique “group/service:version” service is unregistered, but we still have the same services with different version or group, so empty protocols can not be invoked.
+            } else {
+                // Fix map can not be cleared when service is unregistered: when a unique “group/service:version” service is unregistered, but we still have the same services with different version or group, so empty protocols can not be invoked.
                 Set<String> keys = new HashSet<String>(services.keySet());
                 for (String key : keys) {
                     if (this.getInterface(key).equals(interfaceName) && !categoryEntry.getValue().entrySet().contains(key)) {
