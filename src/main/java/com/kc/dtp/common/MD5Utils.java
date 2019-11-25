@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * MD5Util
  */
-public class MD5Util {
+public class MD5Utils {
     private static MessageDigest md;
     private static final char[] hexCode = "0123456789ABCDEF".toCharArray();
 
