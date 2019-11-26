@@ -43,7 +43,7 @@ public class ProviderService implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(ProviderService.class);
 
     private static final long serialVersionUID = -750353929981409079L;
-    ConcurrentMap<String, Map<String, URL>> providerUrls = null;
+    private static ConcurrentMap<String, Map<String, URL>> providerUrls = null;
 
     private static ConcurrentMap<String, ProviderService> cache = new ConcurrentHashMap<>();
 
@@ -92,12 +92,7 @@ public class ProviderService implements Serializable {
         }
         reference.setInterface("org.apache.dubbo.registry.RegistryService");
         try {
-            ReferenceConfigCache cache = ReferenceConfigCache.getCache(address + "_" + group, new ReferenceConfigCache.KeyGenerator() {
-                @Override
-                public String generateKey(ReferenceConfig<?> referenceConfig) {
-                    return referenceConfig.toString();
-                }
-            });
+            ReferenceConfigCache cache = ReferenceConfigCache.getCache(address + "_" + group, referenceConfig -> referenceConfig.toString());
             RegistryService registryService = (RegistryService) cache.get(reference);
             if (Objects.isNull(registryService)) {
                 throw new RuntimeException("Can't get the interface list, please check if the address is wrong!");

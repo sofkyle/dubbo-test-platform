@@ -5,9 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.kc.dtp.bean.vo.ApiVO;
 import com.kc.dtp.bean.vo.ParamVO;
 import com.kc.dtp.bean.vo.ServiceVO;
@@ -15,7 +12,6 @@ import com.kc.dtp.common.ApplicationConfigInstance;
 import com.kc.dtp.common.ClassUtils;
 import com.kc.dtp.common.InterfaceParser;
 import com.kc.dtp.common.ProviderService;
-import com.kc.dtp.service.ApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.dubbo.common.URL;
@@ -29,9 +25,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,15 +37,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class ApiController {
 
-    @Resource
-    private ApiService apiService;
-
     @GetMapping(value = "/list")
     public String list(@ModelAttribute Long userId) {
         return "list";
     }
-
-    private static final Gson gson = new Gson();
 
     @PostMapping(value = "/search")
     public String searchApi(ApiVO apiVO, final Model model) {
@@ -67,7 +55,6 @@ public class ApiController {
             model.addAttribute("errMsg", "服务不存在");
             return "404";
         }
-
 
         // 按组区分服务
         Map<String, List<String>> serviceGroupList = Maps.newHashMap();
