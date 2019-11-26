@@ -60,7 +60,7 @@
                 });
             },
             async listMethod() {
-                if (this.serviceName == "") {
+                if (this.serviceName == '') {
                     return;
                 }
                 let methodList = [];
@@ -85,6 +85,9 @@
                 if (this.methodName == '') {
                     alert("请选择要调用的方法！");
                 }
+
+                // clear invoke result
+                invokeResult = '';
 
                 // check param
                 let paramLArray = new Array(this.paramList.length);
@@ -152,7 +155,7 @@
                     </el-option>
                 </el-select>
 
-                <el-select v-model="methodName" placeholder="请选择方法">
+                <el-select v-model="methodName" filterable placeholder="请选择方法">
                     <el-option
                     v-for="item in methodList"
                     :key="item"
@@ -163,8 +166,7 @@
 
                 <el-table
                 :data="paramList"
-                border
-                style="width: 100%">
+                border>
                     <el-table-column
                     prop="paramType"
                     label="参数类型"
@@ -203,6 +205,8 @@
 
                 <el-input
                 autosize
+                readonly
+                resize="none"
                 type="textarea"
                 placeholder="结果"
                 v-model="invokeResult">

@@ -46,8 +46,9 @@ public class ClassUtils {
         List<Object> valueList = Lists.newLinkedList();
 
         paramList.stream().forEach(paramVO -> {
-            typeList.add(paramVO.getType());
-            valueList.add(adaptValue(paramVO.getType(), paramVO.getValue()));
+            Pair<String, Object> typeValuePair = adaptValue(paramVO.getType(), paramVO.getValue());
+            typeList.add(typeValuePair.getLeft());
+            valueList.add(typeValuePair.getRight());
         });
 
         return Pair.of(typeList, valueList);
@@ -59,123 +60,107 @@ public class ClassUtils {
      * @param value
      * @return
      */
-    private static Object adaptValue(String type, String value) {
+    private static Pair<String, Object> adaptValue(String type, String value) {
         if (Objects.equals(type, "int")) {
-            
-            return StringUtils.isBlank(value) ? INT_DEFAULT : Integer.parseInt(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? INT_DEFAULT : Integer.parseInt(value));
         } else if(Objects.equals(type, "int[]")) {
-            
-            return StringUtils.isBlank(value) ? INT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<int[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? INT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<int[]>() {}.getType()));
         } else if (Objects.equals(type, "double")) {
-            
-            return StringUtils.isBlank(value) ? DOUBLE_DEFAULT : Double.parseDouble(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? DOUBLE_DEFAULT : Double.parseDouble(value));
         }  else if (Objects.equals(type, "double[]")) {
-            
-            return StringUtils.isBlank(value) ? DOUBLE_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<double[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? DOUBLE_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<double[]>() {}.getType()));
         } else if (Objects.equals(type, "short")) {
-            
-            return StringUtils.isBlank(value) ? SHORT_DEFAULT : Short.parseShort(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? SHORT_DEFAULT : Short.parseShort(value));
         } else if (Objects.equals(type, "short[]")) {
-            
-            return StringUtils.isBlank(value) ? SHORT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<short[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? SHORT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<short[]>() {}.getType()));
         } else if (Objects.equals(type, "float")) {
-            
-            return StringUtils.isBlank(value) ? FLOAT_DEFAULT : Float.parseFloat(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? FLOAT_DEFAULT : Float.parseFloat(value));
         } else if (Objects.equals(type, "float[]")) {
-            
-            return StringUtils.isBlank(value) ? FLOAT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<float[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? FLOAT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<float[]>() {}.getType()));
         } else if (Objects.equals(type, "long")) {
-            
-            return StringUtils.isBlank(value) ? LONG_DEFAULT : Long.parseLong(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? LONG_DEFAULT : Long.parseLong(value));
         } else if (Objects.equals(type, "long[]")) {
-            
-            return StringUtils.isBlank(value) ? LONG_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<long[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? LONG_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<long[]>() {}.getType()));
         } else if (Objects.equals(type, "byte")) {
-            
-            return StringUtils.isBlank(value) ? BYTE_DEFAULT : Byte.parseByte(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? BYTE_DEFAULT : Byte.parseByte(value));
         } else if (Objects.equals(type, "byte[]")) {
-            
-            return StringUtils.isBlank(value) ? BYTE_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<byte[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? BYTE_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<byte[]>() {}.getType()));
         } else if (Objects.equals(type, "boolean")) {
-            
-            return StringUtils.isBlank(value) ? BOOLEAN_DEFAULT : Boolean.parseBoolean(value);
+            return Pair.of(type, StringUtils.isBlank(value) ? BOOLEAN_DEFAULT : Boolean.parseBoolean(value));
         } else if (Objects.equals(type, "boolean[]")) {
-            
-            return StringUtils.isBlank(value) ? BOOLEAN_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<boolean[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? BOOLEAN_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<boolean[]>() {}.getType()));
         } else if (Objects.equals(type, "char")) {
-            
-            return StringUtils.isBlank(value) ? CHAR_DEFAULT : value.charAt(0);
+            return Pair.of(type, StringUtils.isBlank(value) ? CHAR_DEFAULT : value.charAt(0));
         } else if (Objects.equals(type, "char[]")) {
-            
-            return StringUtils.isBlank(value) ? CHAT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<char[]>() {}.getType());
+            return Pair.of(type, StringUtils.isBlank(value) ? CHAT_ARRAY_DEFAULT : JSON.parseObject(value, new TypeReference<char[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.String")
                 || Objects.equals(type, "String")
                 || Objects.equals(type, "string")) {
-            
-            return StringUtils.isBlank(value) ? null : value;
+
+            return Pair.of("java.lang.String", StringUtils.isBlank(value) ? null : value);
         } else if (Objects.equals(type, "java.lang.String[]")
                 || Objects.equals(type, "String[]")
                 || Objects.equals(type, "string[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<String[]>() {}.getType());
+
+            return Pair.of("java.lang.String[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<String[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Integer")
                 || Objects.equals(type, "Integer")
                 || Objects.equals(type, "integer")) {
-            
-            return StringUtils.isBlank(value) ? null : Integer.valueOf(value);
+
+            return Pair.of("java.lang.Integer", StringUtils.isBlank(value) ? null : Integer.valueOf(value));
         } else if (Objects.equals(type, "java.lang.Integer[]")
                 || Objects.equals(type, "Integer[]")
                 || Objects.equals(type, "integer[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Integer[]>() {}.getType());
+
+            return Pair.of("java.lang.Integer[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Integer[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Double")
                 || Objects.equals(type, "Double")) {
-            
-            return StringUtils.isBlank(value) ? null : Double.valueOf(value);
+
+            return Pair.of("java.lang.Double", StringUtils.isBlank(value) ? null : Double.valueOf(value));
         } else if (Objects.equals(type, "java.lang.Double[]")
                 || Objects.equals(type, "Double[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Double[]>() {}.getType());
+
+            return Pair.of("java.lang.Double[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Double[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Short")
                 || Objects.equals(type, "Short")) {
-            
-            return StringUtils.isBlank(value) ? null : Short.valueOf(value);
+
+            return Pair.of("java.lang.Short", StringUtils.isBlank(value) ? null : Short.valueOf(value));
         } else if (Objects.equals(type, "java.lang.Short[]")
                 || Objects.equals(type, "Short[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Short[]>() {}.getType());
+
+            return Pair.of("java.lang.Short[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Short[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Long")
                 || Objects.equals(type, "Long")) {
-            
-            return StringUtils.isBlank(value) ? null : Long.valueOf(value);
+
+            return Pair.of("java.lang.Long", StringUtils.isBlank(value) ? null : Long.valueOf(value));
         } else if(Objects.equals(type, "java.lang.Long[]")
                 || Objects.equals(type, "Long[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Long[]>() {}.getType());
+
+            return Pair.of("java.lang.Long[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Long[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Float")
                 || Objects.equals(type, "Float")) {
-            
-            return StringUtils.isBlank(value) ? null : Float.valueOf(value);
+
+            return Pair.of("java.lang.Float", StringUtils.isBlank(value) ? null : Float.valueOf(value));
         } else if (Objects.equals(type, "java.lang.Float[]")
                 || Objects.equals(type, "Float[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Float[]>() {}.getType());
+
+            return Pair.of("java.lang.Float[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Float[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Byte")
                 || Objects.equals(type, "Byte")) {
-            
-            return StringUtils.isBlank(value) ? null : Byte.valueOf(value);
+
+            return Pair.of("java.lang.Byte", StringUtils.isBlank(value) ? null : Byte.valueOf(value));
         } else if (Objects.equals(type, "java.lang.Byte[]")
                 || Objects.equals(type, "Byte[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Byte[]>() {}.getType());
+
+            return Pair.of("java.lang.Byte[]", StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Byte[]>() {}.getType()));
         } else if (Objects.equals(type, "java.lang.Boolean")
                 || Objects.equals(type, "Boolean")) {
-            
-            return StringUtils.isBlank(value) ? null : Boolean.valueOf(value);
+
+            return Pair.of("java.lang.Boolean", StringUtils.isBlank(value) ? null : Boolean.valueOf(value));
         } else if (Objects.equals(type, "java.lang.Boolean[]")
                 || Objects.equals(type, "Boolean[]")) {
-            
-            return StringUtils.isBlank(value) ? null : JSON.parseObject(value, new TypeReference<Boolean[]>() {}.getType());
+
+            return Pair.of("java.lang.Boolean[]", StringUtils.isBlank(value) ? null : JSON.parseObject("java.lang.Boolean[]", new TypeReference<Boolean[]>() {}.getType()));
         } else {
             if (type.endsWith("[]")) {
                 List<?> list = null;
@@ -183,24 +168,25 @@ public class ClassUtils {
                     list = JSON.parseObject(value, new TypeReference<List<?>>() {}.getType());
                 }
                 
-                return list == null ? null : list.toArray();
+                return Objects.isNull(list) ? Pair.of(type, null) : Pair.of(type, list.toArray());
             } else {
                 try {
                     Class<?> clazz = Class.forName(type);
-                    
-                    return StringUtils.isBlank(value) ? null : JSON.parseObject(value, clazz);
+
+                    return Pair.of(type, StringUtils.isBlank(value) ? null : JSON.parseObject(value, clazz));
                 } catch (ClassNotFoundException e) {
                     //不是jdk或者lib下的类，使用通用map格式反序列化值
                     Object obj = null;
                     if (!StringUtils.isBlank(value)) {
                         //使用通用map格式反序列化值
                         obj = JSON.parseObject(value, new TypeReference<HashMap<String, Object>>() {}.getType());
-                        if (obj == null) {
+                        if (Objects.isNull(obj)) {
                             //枚举类型的类走字符串序列化
                             obj = JSON.parseObject(value, String.class);
                         }
                     }
-                    return obj;
+
+                    return Pair.of(type, obj);
                 }
             }
         }
