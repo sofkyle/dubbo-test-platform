@@ -81,6 +81,8 @@
                 this.methodList = methodList;
             },
             async invoke() {
+                this.invokeResult = '';
+
                 // check method name
                 if (this.methodName == '') {
                     alert("请选择要调用的方法！");
