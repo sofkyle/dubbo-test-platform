@@ -16,7 +16,7 @@
 
     <properties>
         <dubbo_version>2.6.4</dubbo_version>
-        <apache_dubbo_version>2.7.1</apache_dubbo_version>
+        <apache_dubbo_version>2.7.15</apache_dubbo_version>
 
         <java.version>1.8</java.version>
     </properties>
